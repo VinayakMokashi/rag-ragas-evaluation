@@ -4,7 +4,14 @@ A minimal **Retrieval-Augmented Generation (RAG)** pipeline that answers questio
 from a small set of documents and then measures the quality of those answers using
 the [RAGAS](https://docs.ragas.io/) evaluation framework.
 
-## What it does
+## What's inside
+
+| File | Description |
+|------|-------------|
+| [`rag_evaluation.py`](rag_evaluation.py) | The full RAG pipeline evaluated with the **RAGAS** framework (context recall + faithfulness). Described below. |
+| [`retrieval_metrics.py`](retrieval_metrics.py) | A tiny, dependency-free companion that computes the classic IR metrics **Recall@k** and **Precision@k** from scratch — the foundations behind RAGAS-style retrieval scoring. |
+
+## What `rag_evaluation.py` does
 
 1. **Embeds** a list of documents using HuggingFace sentence-transformer embeddings.
 2. **Retrieves** the most relevant document for a question via cosine similarity.
@@ -54,3 +61,20 @@ Evaluation Metrics Result:
 ```
 
 Both metrics range from 0 to 1, where 1.0 is the best possible score.
+
+## Bonus: retrieval metrics from scratch
+
+[`retrieval_metrics.py`](retrieval_metrics.py) is a standalone, dependency-free
+script (pure Python — nothing to install) that shows how the core retrieval
+metrics are actually computed:
+
+- **Recall@k** — of all the relevant items, how many appear in the top *k*?
+- **Precision@k** — of the top *k* returned, how many are relevant?
+
+```bash
+python retrieval_metrics.py
+```
+
+It prints Recall@k and Precision@k across a range of *k* for a small worked
+example, making it easy to see how each value changes as *k* grows. These are
+the same ideas that underpin RAGAS's retrieval-side scoring.
